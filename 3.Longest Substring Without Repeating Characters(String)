@@ -1,0 +1,128 @@
+//Given a string s, find the length of the longest 
+//substring
+// without repeating characters.
+//
+// 
+//
+//Example 1:
+//
+//Input: s = "abcabcbb"
+//Output: 3
+//Explanation: The answer is "abc", with the length of 3.
+//Example 2:
+//
+//Input: s = "bbbbb"
+//Output: 1
+//Explanation: The answer is "b", with the length of 1.
+//Example 3:
+//
+//Input: s = "pwwkew"
+//Output: 3
+//Explanation: The answer is "wke", with the length of 3.
+//Notice that the answer must be a substring, "pwke" is a subsequence and not a substring.
+
+
+class Solution {
+    public int lengthOfLongestSubstring(String s) {
+        
+        int n = s.length();
+        int maxLength = 0;
+        int left = 0;
+        int right = 0;
+        HashSet<Character> set = new HashSet<>();
+
+        while (right < n) {
+            if (!set.contains(s.charAt(right))) {
+                set.add(s.charAt(right));
+                maxLength = Math.max(maxLength, right - left + 1);
+                right++;
+            } else {
+                set.remove(s.charAt(left));
+                left++;
+            }
+        }
+        
+        return maxLength;
+    
+    }
+}
+
+//Or another Solution
+import java.util.HashMap;
+import java.util.HashSet;
+
+public class LongestSubstringWithoutRepeating {
+	public static int lengthOfLongestSubstring(String s) {
+        int n = s.length();
+        int maxLength = 0;
+        int left = 0;
+//        int right = 0;
+//        HashSet<Character> set = new HashSet<>();
+//
+//			using HashSEt and while Loop
+//        while (right < n) {
+//            if (!set.contains(s.charAt(right))) {
+//                set.add(s.charAt(right));
+//                maxLength = Math.max(maxLength, right - left + 1);
+//                right++;
+//            } else {
+//                set.remove(s.charAt(left));
+//                left++;
+//            }
+//        }
+        
+        //Using HAshMap and For Loop
+//        HashMap<Character, Integer> map = new HashMap<>();
+//        for (int right = 0; right < n; right++) {
+//            char currentChar = s.charAt(right);
+//
+//            if (map.containsKey(currentChar)) {
+//                // Move the left pointer to the right of the last occurrence
+//                left = Math.max(map.get(currentChar) + 1, left);
+//            }
+//
+//            // Update the last seen index of the current character
+//            map.put(currentChar, right);
+//
+//            // Calculate the maximum length
+//            maxLength = Math.max(maxLength, right - left + 1);
+//        }
+
+        int[] lastIndex = new int[128]; // Assuming ASCII 128 characters
+
+        // Initialize the lastIndex array with -1
+        for (int i = 0; i < 128; i++) {
+            lastIndex[i] = -1;
+        }
+
+        for (int right = 0; right < n; right++) {
+            char currentChar = s.charAt(right);
+
+            // If the character has been seen before and is within the current window
+            if (lastIndex[currentChar] >= left) {
+                // Move the left pointer to the right of the last occurrence
+                left = lastIndex[currentChar] + 1;
+            }
+
+            // Update the last seen index of the current character
+            lastIndex[currentChar] = right;
+
+            // Calculate the maximum length
+            maxLength = Math.max(maxLength, right - left + 1);
+        }
+
+        
+        return maxLength;
+    }
+
+    public static void main(String[] args) {
+        String s1 = "abcabcbb";
+        System.out.println("Length of longest substring without repeating characters: " + lengthOfLongestSubstring(s1)); // Output: 3
+//        
+//        String s2 = "bbbbb";
+//        System.out.println("Length of longest substring without repeating characters: " + lengthOfLongestSubstring(s2)); // Output: 1
+//        
+//        String s3 = "pwwkew";
+//        System.out.println("Length of longest substring without repeating characters: " + lengthOfLongestSubstring(s3)); // Output: 3
+    }
+}
